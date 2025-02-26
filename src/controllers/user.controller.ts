@@ -11,10 +11,6 @@ export const getAllUser = asyncHandler(async (req: Request, res: Response) => {
 export const createUser = asyncHandler(async (req: Request, res: Response) => {
     const { username, password, name, role } = req.body;
 
-    if (!username || !password || !name || !role) {
-        return res.status(400).json({ message: "All fields are required" });
-    }
-
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const newUser = await prisma.user.create({
