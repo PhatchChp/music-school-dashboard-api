@@ -29,5 +29,14 @@ exports.login = (0, asyncHandler_1.asyncHandler)((req, res) => __awaiter(void 0,
             .json({ message: "Invalid username or password" });
     }
     const token = jsonwebtoken_1.default.sign({ userId: user.id, username: user.name, role: user.role }, constants_1.JWT_SECRET, { expiresIn: "4h" });
-    res.status(200).json({ message: "Login Success", token });
+    res.status(200).json({
+        message: "Login Success",
+        token,
+        user: {
+            id: user.id,
+            username: user.username,
+            name: user.name,
+            role: user.role,
+        },
+    });
 }));

@@ -14,7 +14,7 @@ app.use(morgan("dev"));
 app.use(express.json());
 
 app.use("/api", userRouter);
-app.use(loginRouter);
+app.use("/api", loginRouter);
 app.use(errorHandler);
 
 app.listen(PORT, () => console.log(`🛰️ Server running on port ${PORT}`));
