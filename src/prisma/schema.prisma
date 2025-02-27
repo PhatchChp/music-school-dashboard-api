@@ -21,3 +21,71 @@ enum Role {
     USER
     ADMIN
 }
+
+model Student {
+    id          Int          @id @default(autoincrement())
+    firstName   String
+    lastName    String
+    nickName    String
+    age         Int
+    enrollments Enrollment[]
+}
+
+model Instructor {
+    id          Int                 @id @default(autoincrement())
+    firstname   String
+    lastname    String
+    nickname    String
+    age         Int
+    subjects    InstructorSubject[]
+    enrollments Enrollment[]
+}
+
+model InstructorSubject {
+    instructor   Instructor @relation(fields: [instructorId], references: [id])
+    instructorId Int
+    subject      Subject    @relation(fields: [subjectId], references: [id])
+    subjectId    Int
+
+    @@unique([instructorId, subjectId])
+}
+
+model Subject {
+    id          Int                 @id @default(autoincrement())
+    name        String              @unique
+    instructors InstructorSubject[]
+    enrollments Enrollment[]
+}
+
+model Classroom {
+    id          Int          @id @default(autoincrement())
+    name        String       @unique
+    status      String       @default("available") // available, occupied
+    enrollments Enrollment[]
+    Schedule    Schedule[]
+}
+
+model Enrollment {
+    id             Int         @id @default(autoincrement())
+    Student        Student?    @relation(fields: [studentId], references: [id])
+    studentId      Int?
+    Instructor     Instructor? @relation(fields: [instructorId], references: [id])
+    instructorId   Int?
+    Subject        Subject?    @relation(fields: [subjectId], references: [id])
+    subjectId      Int?
+    Classroom      Classroom?  @relation(fields: [classroomId], references: [id])
+    classroomId    Int?
+    totalHours     Int
+    remainingHours Int
+    status         String      @default("ongoing") // ongoing, completed
+    schedule       Schedule[]
+}
+
+model Schedule {
+    id           Int         @id @default(autoincrement())
+    Enrollment   Enrollment? @relation(fields: [enrollmentId], references: [id])
+    enrollmentId Int?
+    dateTime     DateTime
+    room         Classroom   @relation(fields: [roomId], references: [id])
+    roomId       Int
+}
