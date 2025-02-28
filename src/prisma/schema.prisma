@@ -28,6 +28,7 @@ model Student {
     lastName    String
     nickName    String
     age         Int
+    createdAt   DateTime     @default(now())
     enrollments Enrollment[]
 }
 
@@ -37,6 +38,7 @@ model Instructor {
     lastname    String
     nickname    String
     age         Int
+    createdAt   DateTime            @default(now())
     subjects    InstructorSubject[]
     enrollments Enrollment[]
 }
@@ -78,6 +80,7 @@ model Enrollment {
     totalHours     Int
     remainingHours Int
     status         String      @default("ongoing") // ongoing, completed
+    createdAt      DateTime    @default(now())
     schedule       Schedule[]
 }
 
