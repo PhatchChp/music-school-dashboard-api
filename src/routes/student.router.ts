@@ -22,4 +22,12 @@ router.post(
     createStudent
 );
 
+router.put(
+    "/update/:id",
+    verifyToken,
+    authorize([Role.ADMIN]),
+    validate(studentSchema),
+    updateStudent
+);
+
 export default router;

@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createStudent = exports.getAllStudent = void 0;
+exports.updateStudent = exports.createStudent = exports.getAllStudent = void 0;
 const asyncHandler_1 = require("../utils/asyncHandler");
 const prisma_1 = require("../config/prisma");
 exports.getAllStudent = (0, asyncHandler_1.asyncHandler)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -24,4 +24,13 @@ exports.createStudent = (0, asyncHandler_1.asyncHandler)((req, res) => __awaiter
         data: { firstName, lastName, nickName, age },
     });
     res.status(201).json({ student });
+}));
+exports.updateStudent = (0, asyncHandler_1.asyncHandler)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.params;
+    const { firstName, lastName, nickName, age } = req.body;
+    const studentUpdated = yield prisma_1.prisma.student.update({
+        where: { id: Number(id) },
+        data: { firstName, lastName, nickName, age },
+    });
+    res.status(200).json({ studentUpdated });
 }));
