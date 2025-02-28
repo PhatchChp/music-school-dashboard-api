@@ -7,7 +7,7 @@ import { authorize } from "../middlewares/authorize";
 
 const router = Router();
 
-router.get("/users", verifyToken, authorize(["ADMIN"]), getAllUser);
+router.get("/", verifyToken, authorize(["ADMIN"]), getAllUser);
 router.post(
     "/create",
     verifyToken,
