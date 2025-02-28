@@ -37,6 +37,8 @@ exports.login = (0, asyncHandler_1.asyncHandler)((req, res) => __awaiter(void 0,
             username: user.username,
             name: user.name,
             role: user.role,
+            createdAt: user.createdAt,
+            updatedAt: user.updatedAt,
         },
     });
 }));

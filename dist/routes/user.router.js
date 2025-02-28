@@ -7,6 +7,6 @@ const user_validation_1 = require("../validations/user.validation");
 const verifyToken_1 = require("../middlewares/verifyToken");
 const authorize_1 = require("../middlewares/authorize");
 const router = (0, express_1.Router)();
-router.get("/users", verifyToken_1.verifyToken, (0, authorize_1.authorize)(["ADMIN"]), user_controller_1.getAllUser);
+router.get("/", verifyToken_1.verifyToken, (0, authorize_1.authorize)(["ADMIN"]), user_controller_1.getAllUser);
 router.post("/create", verifyToken_1.verifyToken, (0, authorize_1.authorize)(["ADMIN"]), (0, validate_1.validate)(user_validation_1.userSchema), user_controller_1.createUser);
 exports.default = router;
