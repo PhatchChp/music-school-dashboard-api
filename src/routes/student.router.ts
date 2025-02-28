@@ -5,17 +5,19 @@ import { validate } from "../middlewares/validate";
 import {
     createStudent,
     getAllStudent,
+    updateStudent,
 } from "../controllers/student.controller";
 import { studentSchema } from "../validations/studentSchema";
+import { Role } from "../config/constants";
 
 const router = Router();
 
-router.get("/", verifyToken, authorize(["ADMIN"]), getAllStudent);
+router.get("/", verifyToken, authorize([Role.ADMIN]), getAllStudent);
 
 router.post(
     "/create",
     verifyToken,
-    authorize(["ADMIN"]),
+    authorize([Role.ADMIN]),
     validate(studentSchema),
     createStudent
 );

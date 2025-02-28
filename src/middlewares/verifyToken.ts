@@ -1,11 +1,11 @@
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { NextFunction, Request, Response } from "express";
-import { JWT_SECRET } from "../config/constants";
+import { JWT_SECRET, Role } from "../config/constants";
 
 interface DecodedToken extends JwtPayload {
     userId: string;
     username: string;
-    role: "ADMIN" | "USER";
+    role: Role.ADMIN | Role.USER;
     tokenType: "access" | "refresh";
 }
 
