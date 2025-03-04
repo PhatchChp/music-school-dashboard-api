@@ -42,39 +42,22 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteStudent = exports.updateStudent = exports.createStudent = exports.getStudentById = exports.getAllStudent = void 0;
-const asyncHandler_1 = require("../utils/asyncHandler");
-const studentService = __importStar(require("../services/student.service"));
-const entityUtils_1 = require("../utils/entityUtils");
+exports.ensureUserExists = exports.ensureStudentExists = void 0;
 const errorHandler_1 = require("../middlewares/errorHandler");
-exports.getAllStudent = (0, asyncHandler_1.asyncHandler)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const students = yield studentService.getAllStudent();
-    return res.status(200).json({ students });
-}));
-exports.getStudentById = (0, asyncHandler_1.asyncHandler)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const student = yield studentService.getStudentById(Number(req.params.id));
+const studentService = __importStar(require("../services/student.service"));
+const userService = __importStar(require("../services/user.service"));
+// Student
+const ensureStudentExists = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    const student = yield studentService.getStudentById(id);
     if (!student)
         throw new errorHandler_1.NotFoundError("Student not found");
-    return res.status(200).json({ student });
-}));
-exports.createStudent = (0, asyncHandler_1.asyncHandler)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const existed = yield studentService.isStudentExists(req.body);
-    if (existed) {
-        return res.status(409).json({ message: "Student already exists" });
-    }
-    const student = yield studentService.createStudent(req.body);
-    return res.status(201).json({ student });
-}));
-exports.updateStudent = (0, asyncHandler_1.asyncHandler)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    yield (0, entityUtils_1.ensureStudentExists)(Number(req.params.id));
-    const nameExists = yield studentService.isStudentExists(req.body);
-    if (nameExists)
-        throw new errorHandler_1.ExistingError("Student already exists");
-    const studentUpdated = yield studentService.updateStudent(Number(req.params.id), req.body);
-    return res.status(200).json({ studentUpdated });
-}));
-exports.deleteStudent = (0, asyncHandler_1.asyncHandler)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    yield (0, entityUtils_1.ensureStudentExists)(Number(req.params.id));
-    const studentDeleted = yield studentService.deleteStudentById(Number(req.params.id));
-    return res.status(200).json({ studentDeleted });
-}));
+    return student;
+});
+exports.ensureStudentExists = ensureStudentExists;
+const ensureUserExists = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = yield userService.getUserById(id);
+    if (!user)
+        throw new errorHandler_1.NotFoundError("User not found");
+    return user;
+});
+exports.ensureUserExists = ensureUserExists;

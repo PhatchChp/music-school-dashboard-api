@@ -6,5 +6,9 @@ exports.studentSchema = zod_1.z.object({
     firstName: zod_1.z.string().min(1),
     lastName: zod_1.z.string().min(1),
     nickName: zod_1.z.string().min(1),
-    age: zod_1.z.number().int().positive(),
+    age: zod_1.z
+        .number()
+        .int()
+        .positive()
+        .max(100, { message: "Age must not exceed 100 years" }),
 });

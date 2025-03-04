@@ -1,7 +1,13 @@
 import { Router } from "express";
-import { createUser, getAllUser } from "../controllers/user.controller";
+import {
+    createUser,
+    deleteUser,
+    getAllUser,
+    updateUser,
+    checkUserExists,
+} from "../controllers/user.controller";
 import { validate } from "../middlewares/validate";
-import { userSchema } from "../validations/user.validation";
+import { userExistsSchema, userSchema } from "../validations/userSchema";
 import { verifyToken } from "../middlewares/verifyToken";
 import { authorize } from "../middlewares/authorize";
 import { Role } from "../config/constants";
@@ -15,6 +21,21 @@ router.post(
     authorize([Role.ADMIN]),
     validate(userSchema),
     createUser
+);
+router.put(
+    "/update/:id",
+    verifyToken,
+    authorize([Role.ADMIN]),
+    validate(userSchema),
+    updateUser
+);
+router.delete("/delete/:id", verifyToken, authorize([Role.ADMIN]), deleteUser);
+router.post(
+    "/check",
+    verifyToken,
+    authorize([Role.ADMIN]),
+    validate(userExistsSchema),
+    checkUserExists
 );
 
 export default router;

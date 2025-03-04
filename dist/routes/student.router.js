@@ -9,6 +9,8 @@ const studentSchema_1 = require("../validations/studentSchema");
 const constants_1 = require("../config/constants");
 const router = (0, express_1.Router)();
 router.get("/", verifyToken_1.verifyToken, (0, authorize_1.authorize)([constants_1.Role.ADMIN]), student_controller_1.getAllStudent);
+router.get("/:id", verifyToken_1.verifyToken, (0, authorize_1.authorize)([constants_1.Role.ADMIN]), student_controller_1.getStudentById);
 router.post("/create", verifyToken_1.verifyToken, (0, authorize_1.authorize)([constants_1.Role.ADMIN]), (0, validate_1.validate)(studentSchema_1.studentSchema), student_controller_1.createStudent);
 router.put("/update/:id", verifyToken_1.verifyToken, (0, authorize_1.authorize)([constants_1.Role.ADMIN]), (0, validate_1.validate)(studentSchema_1.studentSchema), student_controller_1.updateStudent);
+router.delete("/delete/:id", verifyToken_1.verifyToken, (0, authorize_1.authorize)([constants_1.Role.ADMIN]), student_controller_1.deleteStudent);
 exports.default = router;

@@ -18,6 +18,7 @@ const bcrypt_1 = __importDefault(require("bcrypt"));
 const asyncHandler_1 = require("../utils/asyncHandler");
 const prisma_1 = require("../config/prisma");
 const constants_1 = require("../config/constants");
+const fomatUser_1 = require("../utils/fomatUser");
 exports.login = (0, asyncHandler_1.asyncHandler)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { username, password } = req.body;
     const user = yield prisma_1.prisma.user.findUnique({
@@ -29,16 +30,10 @@ exports.login = (0, asyncHandler_1.asyncHandler)((req, res) => __awaiter(void 0,
             .json({ message: "Invalid username or password" });
     }
     const token = jsonwebtoken_1.default.sign({ userId: user.id, username: user.name, role: user.role }, constants_1.JWT_SECRET, { expiresIn: "4h" });
-    res.status(200).json({
+    const userResponse = (0, fomatUser_1.toUserResponse)(user);
+    return res.status(200).json({
         message: "Login Success",
         token,
-        user: {
-            id: user.id,
-            username: user.username,
-            name: user.name,
-            role: user.role,
-            createdAt: user.createdAt,
-            updatedAt: user.updatedAt,
-        },
+        user: userResponse,
     });
 }));
