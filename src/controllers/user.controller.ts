@@ -1,25 +1,62 @@
+import { ensureUserExists } from "./../utils/entityUtils";
+import { asyncHandler } from "./../utils/asyncHandler";
 import { Request, Response } from "express";
-import { prisma } from "../config/prisma";
-import { asyncHandler } from "../utils/asyncHandler";
+import * as userService from "../services/user.service";
+import { toUserResponse } from "../utils/fomatUser";
 import bcrypt from "bcrypt";
+import { ExistingError, NotFoundError } from "../middlewares/errorHandler";
 
 export const getAllUser = asyncHandler(async (req: Request, res: Response) => {
-    const users = await prisma.user.findMany({ orderBy: { id: "desc" } });
-    res.status(200).json({ users });
+    const users = await userService.getAllUser();
+    const userResponse = users.map((user) => toUserResponse(user));
+    return res.status(200).json({ userResponse });
+});
+
+export const getUserById = asyncHandler(async (req: Request, res: Response) => {
+    const user = await userService.getUserById(Number(req.params.id));
+    if (!user) throw new NotFoundError("User not found");
+
+    const userResponse = toUserResponse(user);
+    return res.status(200).json({ userResponse });
 });
 
 export const createUser = asyncHandler(async (req: Request, res: Response) => {
-    const { username, password, name, role } = req.body;
+    const userExisting = await userService.isUserExists(req.body);
+    if (userExisting) throw new ExistingError("User already exists");
 
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    const newUser = await prisma.user.create({
-        data: {
-            username,
-            password: hashedPassword,
-            name,
-            role,
-        },
+    const hashedPassword = await bcrypt.hash(req.body.password, 10);
+    const userCreated = await userService.createUser({
+        ...req.body,
+        password: hashedPassword,
     });
-    res.status(201).json({ message: "Create User success!" });
+
+    const userResponse = toUserResponse(userCreated);
+    return res.status(201).json({ userResponse });
 });
+
+export const updateUser = asyncHandler(async (req: Request, res: Response) => {
+    await ensureUserExists(Number(req.params.id));
+    const usernameExists = await userService.isUserExists(req.body);
+    if (usernameExists) throw new ExistingError("Username already exists");
+
+    const userUpdated = await userService.updateUser(
+        Number(req.params.id),
+        req.body
+    );
+    const userResponse = toUserResponse(userUpdated);
+    return res.status(200).json({ userResponse });
+});
+
+export const deleteUser = asyncHandler(async (req: Request, res: Response) => {
+    await ensureUserExists(Number(req.params.id));
+    const deletedUser = await userService.deleteUserById(Number(req.params.id));
+    return res.status(200).json({ deletedUser });
+});
+
+export const checkUserExists = asyncHandler(
+    async (req: Request, res: Response) => {
+        const userExisting = await userService.isUserExists(req.body);
+        if (userExisting) throw new ExistingError("Username already exists");
+        return res.status(200).json({ exists: false });
+    }
+);
