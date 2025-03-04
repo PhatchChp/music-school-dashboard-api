@@ -1,6 +1,20 @@
 import { ErrorRequestHandler, NextFunction, Request, Response } from "express";
 import { ZodError } from "zod";
 
+export class NotFoundError extends Error {
+    constructor(message: string = "Resource not found") {
+        super(message);
+        this.name = "NotFoundError";
+    }
+}
+
+export class ExistingError extends Error {
+    constructor(message: string = "Resource already exists") {
+        super(message);
+        this.name = "ExistingError";
+    }
+}
+
 export const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
     if (err instanceof ZodError) {
         res.status(400).json({
@@ -9,6 +23,16 @@ export const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
                 message: issue.message,
             })),
         });
+        return;
+    }
+
+    if (err instanceof NotFoundError) {
+        res.status(404).json({ message: err.message });
+        return;
+    }
+
+    if (err instanceof ExistingError) {
+        res.status(409).json({ message: err.message });
         return;
     }
 
