@@ -7,3 +7,7 @@ export const userSchema = z.object({
     name: z.string().min(1, "Name is required"),
     role: z.enum([Role.ADMIN, Role.USER], { message: "Invalid role" }),
 });
+
+export const userExistsSchema = z.object({
+    username: z.string().min(1, "Username is required"),
+});
