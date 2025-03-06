@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.userExists = exports.deleteUserById = exports.updateUser = exports.createUser = exports.getUserById = exports.getAllUser = void 0;
+exports.isUserExists = exports.deleteUserById = exports.updateUser = exports.createUser = exports.getUserById = exports.getAllUser = void 0;
 const prisma_1 = require("../config/prisma");
 const getAllUser = () => __awaiter(void 0, void 0, void 0, function* () {
     return yield prisma_1.prisma.user.findMany({ orderBy: { id: "desc" } });
@@ -31,9 +31,10 @@ const deleteUserById = (id) => __awaiter(void 0, void 0, void 0, function* () {
     return yield prisma_1.prisma.user.delete({ where: { id } });
 });
 exports.deleteUserById = deleteUserById;
-const userExists = (data) => __awaiter(void 0, void 0, void 0, function* () {
-    return yield prisma_1.prisma.user.findFirst({
+const isUserExists = (data) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = yield prisma_1.prisma.user.findFirst({
         where: { username: data.username },
     });
+    return !!user; // ถ้าเจอ -> true ถ้าไม่เจอ -> false
 });
-exports.userExists = userExists;
+exports.isUserExists = isUserExists;

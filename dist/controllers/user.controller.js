@@ -55,44 +55,41 @@ const errorHandler_1 = require("../middlewares/errorHandler");
 exports.getAllUser = (0, asyncHandler_1.asyncHandler)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const users = yield userService.getAllUser();
     const userResponse = users.map((user) => (0, fomatUser_1.toUserResponse)(user));
-    return res.status(200).json({ userResponse });
+    return res.status(200).json(userResponse);
 }));
 exports.getUserById = (0, asyncHandler_1.asyncHandler)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const user = yield userService.getUserById(Number(req.params.id));
     if (!user)
         throw new errorHandler_1.NotFoundError("User not found");
     const userResponse = (0, fomatUser_1.toUserResponse)(user);
-    return res.status(200).json({ userResponse });
+    return res.status(200).json(userResponse);
 }));
 exports.createUser = (0, asyncHandler_1.asyncHandler)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const userExisting = yield userService.userExists(req.body);
+    const userExisting = yield userService.isUserExists(req.body);
     if (userExisting)
         throw new errorHandler_1.ExistingError("User already exists");
     const hashedPassword = yield bcrypt_1.default.hash(req.body.password, 10);
     const userCreated = yield userService.createUser(Object.assign(Object.assign({}, req.body), { password: hashedPassword }));
     const userResponse = (0, fomatUser_1.toUserResponse)(userCreated);
-    return res.status(201).json({ userResponse });
+    return res.status(201).json(userResponse);
 }));
 exports.updateUser = (0, asyncHandler_1.asyncHandler)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     yield (0, entityUtils_1.ensureUserExists)(Number(req.params.id));
-    const usernameExists = yield userService.userExists(req.body);
+    const usernameExists = yield userService.isUserExists(req.body);
     if (usernameExists)
         throw new errorHandler_1.ExistingError("Username already exists");
     const userUpdated = yield userService.updateUser(Number(req.params.id), req.body);
     const userResponse = (0, fomatUser_1.toUserResponse)(userUpdated);
-    return res.status(200).json({ userResponse });
+    return res.status(200).json(userResponse);
 }));
 exports.deleteUser = (0, asyncHandler_1.asyncHandler)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     yield (0, entityUtils_1.ensureUserExists)(Number(req.params.id));
     const deletedUser = yield userService.deleteUserById(Number(req.params.id));
-    return res.status(200).json({ deletedUser });
+    return res.status(200).json(deletedUser);
 }));
 exports.checkUserExists = (0, asyncHandler_1.asyncHandler)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const userExisting = yield userService.userExists(req.body);
-    if (userExisting) {
-        return res
-            .status(409)
-            .json({ exists: true, message: "Username already exists" });
-    }
+    const userExisting = yield userService.isUserExists(req.body);
+    if (userExisting)
+        throw new errorHandler_1.ExistingError("Username already exists");
     return res.status(200).json({ exists: false });
 }));

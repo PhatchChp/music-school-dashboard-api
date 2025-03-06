@@ -54,6 +54,7 @@ const ensureStudentExists = (id) => __awaiter(void 0, void 0, void 0, function* 
     return student;
 });
 exports.ensureStudentExists = ensureStudentExists;
+// User
 const ensureUserExists = (id) => __awaiter(void 0, void 0, void 0, function* () {
     const user = yield userService.getUserById(id);
     if (!user)

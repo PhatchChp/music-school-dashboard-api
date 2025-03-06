@@ -7,7 +7,7 @@ import { ExistingError, NotFoundError } from "../middlewares/errorHandler";
 export const getAllStudent = asyncHandler(
     async (req: Request, res: Response) => {
         const students = await studentService.getAllStudent();
-        return res.status(200).json({ students });
+        return res.status(200).json(students);
     }
 );
 
@@ -18,7 +18,7 @@ export const getStudentById = asyncHandler(
         );
         if (!student) throw new NotFoundError("Student not found");
 
-        return res.status(200).json({ student });
+        return res.status(200).json(student);
     }
 );
 
@@ -30,7 +30,7 @@ export const createStudent = asyncHandler(
         }
 
         const student = await studentService.createStudent(req.body);
-        return res.status(201).json({ student });
+        return res.status(201).json(student);
     }
 );
 
@@ -45,7 +45,7 @@ export const updateStudent = asyncHandler(
             req.body
         );
 
-        return res.status(200).json({ studentUpdated });
+        return res.status(200).json(studentUpdated);
     }
 );
 
@@ -55,6 +55,6 @@ export const deleteStudent = asyncHandler(
         const studentDeleted = await studentService.deleteStudentById(
             Number(req.params.id)
         );
-        return res.status(200).json({ studentDeleted });
+        return res.status(200).json(studentDeleted);
     }
 );
