@@ -11,13 +11,15 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.isUserExists = exports.deleteUserById = exports.updateUser = exports.createUser = exports.getUserById = exports.getAllUser = void 0;
 const prisma_1 = require("../config/prisma");
-const getAllUser = (page, itemsPerpage, search, role) => __awaiter(void 0, void 0, void 0, function* () {
-    const skip = (page - 1) * itemsPerpage;
-    const where = Object.assign(Object.assign({}, ((search === null || search === void 0 ? void 0 : search.trim()) !== "" ? { name: { contains: search, mode: "insensitive" } } : {})), (role ? { role } : {}));
+const getAllUser = (page, itemsPerPage, search, role) => __awaiter(void 0, void 0, void 0, function* () {
+    const skip = (page - 1) * itemsPerPage;
+    const where = Object.assign(Object.assign({}, ((search === null || search === void 0 ? void 0 : search.trim()) !== "" || undefined
+        ? { name: { contains: search, mode: "insensitive" } }
+        : {})), (role !== undefined ? { role } : {}));
     const users = yield prisma_1.prisma.user.findMany({
         orderBy: { id: "desc" },
         skip,
-        take: itemsPerpage,
+        take: itemsPerPage,
         where,
     });
     const totalItem = yield prisma_1.prisma.user.count({ where }); // for totalPage

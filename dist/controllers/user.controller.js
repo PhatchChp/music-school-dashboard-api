@@ -55,19 +55,19 @@ const errorHandler_1 = require("../middlewares/errorHandler");
 const constants_1 = require("../config/constants");
 exports.getAllUser = (0, asyncHandler_1.asyncHandler)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const page = parseInt(req.query.page) || 1;
-    const itemsPerpage = parseInt(req.query.limit) || 10;
+    const itemsPerPage = parseInt(req.query.itemsPerPage) || 10;
     const search = String(req.query.search || "");
     const role = Object.values(constants_1.Role).includes(req.query.role)
         ? req.query.role
         : undefined;
-    const { users, totalItem } = yield userService.getAllUser(page, itemsPerpage, search, role);
+    const { users, totalItem } = yield userService.getAllUser(page, itemsPerPage, search, role);
     const userResponse = users.map((user) => (0, fomatUser_1.toUserResponse)(user));
     return res.status(200).json({
         page,
-        itemsPerpage,
+        itemsPerpage: itemsPerPage,
         totalItem,
-        totalPage: Math.ceil(totalItem / itemsPerpage),
-        users: userResponse,
+        totalPage: Math.ceil(totalItem / itemsPerPage),
+        data: userResponse,
     });
 }));
 exports.getUserById = (0, asyncHandler_1.asyncHandler)((req, res) => __awaiter(void 0, void 0, void 0, function* () {

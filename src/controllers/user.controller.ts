@@ -9,21 +9,21 @@ import { Role } from "../config/constants";
 
 export const getAllUser = asyncHandler(async (req: Request, res: Response) => {
     const page = parseInt(req.query.page as string) || 1;
-    const itemsPerpage = parseInt(req.query.limit as string) || 10;
+    const itemsPerPage = parseInt(req.query.itemsPerPage as string) || 10;
     const search = String(req.query.search || "");
     const role = Object.values(Role).includes(req.query.role as Role)
         ? (req.query.role as Role)
         : undefined;
 
-    const { users, totalItem } = await userService.getAllUser(page, itemsPerpage, search, role);
+    const { users, totalItem } = await userService.getAllUser(page, itemsPerPage, search, role);
     const userResponse = users.map((user) => toUserResponse(user));
 
     return res.status(200).json({
         page,
-        itemsPerpage,
+        itemsPerpage: itemsPerPage,
         totalItem,
-        totalPage: Math.ceil(totalItem / itemsPerpage),
-        users: userResponse,
+        totalPage: Math.ceil(totalItem / itemsPerPage),
+        data: userResponse,
     });
 });
 

@@ -5,20 +5,22 @@ import { Role } from "../config/constants";
 
 export const getAllUser = async (
     page: number,
-    itemsPerpage: number,
+    itemsPerPage: number,
     search?: string,
     role?: Role
 ): Promise<{ users: User[]; totalItem: number }> => {
-    const skip = (page - 1) * itemsPerpage;
+    const skip = (page - 1) * itemsPerPage;
     const where: Prisma.UserWhereInput = {
-        ...(search?.trim() !== "" ? { name: { contains: search, mode: "insensitive" } } : {}),
-        ...(role ? { role } : {}),
+        ...(search?.trim() !== "" || undefined
+            ? { name: { contains: search, mode: "insensitive" } }
+            : {}),
+        ...(role !== undefined ? { role } : {}),
     };
 
     const users = await prisma.user.findMany({
         orderBy: { id: "desc" },
         skip,
-        take: itemsPerpage,
+        take: itemsPerPage,
         where,
     });
 
